@@ -1,5 +1,5 @@
 QCSS_STYLES = """
-QMainWindow {
+QMainWindow, QDialog {
     background-color: #121417;
 }
 
@@ -26,8 +26,8 @@ QGroupBox::title {
     background-color: #121417;
 }
 
-/* Entradas de texto */
-QLineEdit {
+/* Entradas de texto, Listas y SpinBoxes */
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {
     background-color: #1E2229;
     border: 1px solid #363C48;
     border-radius: 6px;
@@ -36,9 +36,19 @@ QLineEdit {
     selection-background-color: #00ADB5;
 }
 
-QLineEdit:focus {
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus {
     border: 1px solid #00ADB5;
     background-color: #242932;
+}
+
+QComboBox::drop-down {
+    border: none;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #1E2229;
+    color: #FFFFFF;
+    selection-background-color: #00ADB5;
 }
 
 /* Botones */
@@ -71,6 +81,7 @@ QPushButton#btn_secundario:hover {
 /* Tablas */
 QTableWidget {
     background-color: #1A1D24;
+    alternate-background-color: #1E2229; /* ESTA ES LA LÍNEA NUEVA PARA ARREGLAR LAS FILAS BLANCAS */
     border: 1px solid #2B303A;
     border-radius: 6px;
     gridline-color: #262B35;

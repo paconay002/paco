@@ -1,1 +1,88 @@
-{}
+{
+    "Frenos": {
+        "Toyota": [
+            {
+                "codigo_parte": "7874",
+                "nombre": "Frenos",
+                "categoria": "Frenos",
+                "marca_vehiculo": "Toyota",
+                "stock": 1,
+                "precio_costo": 70.0,
+                "margen_ganancia": 0.3,
+                "precio_venta": 91.0,
+                "fecha_registro": "2026-10-08 19:02:14",
+                "estado_stock": "Disponible"
+            }
+        ]
+    },
+    "Motor": {
+        "Toyota": [
+            {
+                "codigo_parte": "1201",
+                "nombre": "bujia",
+                "categoria": "Motor",
+                "marca_vehiculo": "Toyota",
+                "stock": 2,
+                "precio_costo": 40.0,
+                "margen_ganancia": 0.3,
+                "precio_venta": 52.0,
+                "fecha_registro": "2026-10-08 19:04:02",
+                "estado_stock": "Disponible"
+            },
+            {
+                "codigo_parte": "7502",
+                "nombre": "correa de tiempo",
+                "categoria": "Motor",
+                "marca_vehiculo": "Toyota",
+                "stock": 1,
+                "precio_costo": 50.0,
+                "margen_ganancia": 0.3,
+                "precio_venta": 65.0,
+                "fecha_registro": "2026-10-08 19:04:54",
+                "estado_stock": "Disponible"
+            }
+        ],
+        "Jeep": [
+            {
+                "codigo_parte": "0102",
+                "nombre": "filtro aceite",
+                "categoria": "Motor",
+                "marca_vehiculo": "Jeep",
+                "stock": 3,
+                "precio_costo": 34.0,
+                "margen_ganancia": 0.3,
+                "precio_venta": 44.2,
+                "fecha_registro": "2026-10-08 19:08:55"
+            }
+        ],
+        "Ford": [
+            {
+                "codigo_parte": "5678",
+                "nombre": "bujia",
+                "categoria": "Motor",
+                "marca_vehiculo": "Ford",
+                "stock": 1,
+                "precio_costo": 30000.0,
+                "margen_ganancia": 0.3,
+                "precio_venta": 39000.0,
+                "fecha_registro": "2026-10-08 19:15:24"
+            }
+        ]
+    },
+    "Suspension": {
+        "Ford": [
+            {
+                "codigo_parte": "7777",
+                "nombre": "aspiral",
+                "categoria": "Suspension",
+                "marca_vehiculo": "Ford",
+                "stock": 5,
+                "precio_costo": 10000.0,
+                "margen_ganancia": 0.3,
+                "precio_venta": 13000.0,
+                "fecha_registro": "2026-10-08 19:07:31",
+                "estado_stock": "Disponible"
+            }
+        ]
+    }
+}

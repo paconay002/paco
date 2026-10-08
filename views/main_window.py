@@ -2,7 +2,8 @@ import time
 from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
     QLabel, QLineEdit, QPushButton, QTableWidget, 
-    QTableWidgetItem, QHeaderView, QGroupBox, QFrame, QMessageBox
+    QTableWidgetItem, QHeaderView, QGroupBox, QFrame, QMessageBox,
+    QDialog, QFormLayout, QDialogButtonBox, QDoubleSpinBox, QSpinBox, QComboBox
 )
 from PyQt5.QtCore import Qt
 from models.inventario_dao import InventarioDAO
@@ -83,10 +84,22 @@ class MainWindow(QMainWindow):
         btn_actualizar.setObjectName("btn_secundario")
         btn_actualizar.clicked.connect(self.recargar_tabla_inventario)
 
+        # --- BOTONES NUEVOS AGREGADOS AQUÍ ---
+        btn_agregar = QPushButton("Agregar Repuesto")
+        btn_agregar.clicked.connect(self.abrir_dialogo_agregar)
+
+        btn_eliminar = QPushButton("Eliminar Seleccionado")
+        btn_eliminar.setObjectName("btn_secundario")
+        btn_eliminar.clicked.connect(self.eliminar_repuesto_seleccionado)
+
         self.lbl_conteo_total = QLabel("Total productos registrados: 0")
         
         layout_acciones.addWidget(self.lbl_conteo_total)
         layout_acciones.addStretch()
+        
+        # SE AÑADEN TODOS LOS BOTONES AL LAYOUT SIN QUITAR NADA
+        layout_acciones.addWidget(btn_agregar)
+        layout_acciones.addWidget(btn_eliminar)
         layout_acciones.addWidget(btn_actualizar)
         layout_inv.addLayout(layout_acciones)
 
@@ -154,3 +167,78 @@ class MainWindow(QMainWindow):
             self.tabla.setItem(fila_idx, 6, QTableWidgetItem(str(item.get("fecha_registro", ""))))
 
         self.lbl_conteo_total.setText(f"Total productos registrados: {len(items)}")
+
+    # --- NUEVOS MÉTODOS AÑADIDOS AL FINAL ---
+
+    def abrir_dialogo_agregar(self):
+        dialogo = QDialog(self)
+        dialogo.setWindowTitle("Agregar Nuevo Repuesto")
+        dialogo.resize(400, 300)
+        layout = QFormLayout(dialogo)
+
+        txt_codigo = QLineEdit()
+        txt_nombre = QLineEdit()
+        
+        combo_cat = QComboBox()
+        combo_cat.addItems(["Frenos", "Suspension", "Motor", "Electrico"])
+        
+        combo_marca = QComboBox()
+        combo_marca.addItems(["Toyota", "Ford", "Chevrolet", "Jeep"])
+        
+        spin_stock = QSpinBox()
+        spin_stock.setMaximum(9999)
+        
+        spin_costo = QDoubleSpinBox()
+        spin_costo.setMaximum(99999.99)
+
+        layout.addRow("Código de Parte:", txt_codigo)
+        layout.addRow("Nombre/Descripción:", txt_nombre)
+        layout.addRow("Categoría:", combo_cat)
+        layout.addRow("Marca Vehículo:", combo_marca)
+        layout.addRow("Stock Inicial:", spin_stock)
+        layout.addRow("Precio Costo ($):", spin_costo)
+
+        botones = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        botones.accepted.connect(dialogo.accept)
+        botones.rejected.connect(dialogo.reject)
+        layout.addWidget(botones)
+
+        if dialogo.exec_() == QDialog.Accepted:
+            cod = txt_codigo.text().strip()
+            nom = txt_nombre.text().strip()
+            if not cod or not nom:
+                QMessageBox.warning(self, "Error", "El código y el nombre son obligatorios.")
+                return
+            
+            nuevo_repuesto = Repuesto(
+                codigo_parte=cod,
+                nombre=nom,
+                categoria=combo_cat.currentText(),
+                marca_vehiculo=combo_marca.currentText(),
+                stock=spin_stock.value(),
+                precio_costo=spin_costo.value()
+            )
+            # Reutilizamos registrar_repuesto que ya existía en tu DAO
+            self.dao.registrar_repuesto(nuevo_repuesto)
+            self.recargar_tabla_inventario()
+            QMessageBox.information(self, "Éxito", "Repuesto agregado correctamente.")
+
+    def eliminar_repuesto_seleccionado(self):
+        fila_actual = self.tabla.currentRow()
+        if fila_actual < 0:
+            QMessageBox.warning(self, "Atención", "Por favor seleccione un repuesto de la tabla para eliminar.")
+            return
+
+        codigo_item = self.tabla.item(fila_actual, 0).text()
+        respuesta = QMessageBox.question(
+            self, "Confirmar Eliminación", 
+            f"¿Está seguro que desea eliminar el repuesto con código {codigo_item}?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+
+        if respuesta == QMessageBox.Yes:
+            if self.dao.eliminar_repuesto(codigo_item):
+                self.recargar_tabla_inventario()
+                QMessageBox.information(self, "Éxito", "Repuesto eliminado correctamente.")
+            else:
+                QMessageBox.warning(self, "Error", "No se pudo encontrar el repuesto para eliminar.")

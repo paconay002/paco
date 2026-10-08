@@ -116,3 +116,23 @@ class InventarioDAO:
                     self.datos[cat][marca].append(rep.to_dict())
 
         self.guardar_datos()
+
+    # --- NUEVO MÉTODO AGREGADO ---
+    def eliminar_repuesto(self, codigo_parte):
+        codigo_limpio = str(codigo_parte).strip().upper()
+        eliminado = False
+        for cat, marcas in self.datos.items():
+            for marca, repuestos in marcas.items():
+                for i in range(len(repuestos)):
+                    if repuestos[i].get("codigo_parte") == codigo_limpio:
+                        del repuestos[i]
+                        eliminado = True
+                        break
+                if eliminado: 
+                    break
+            if eliminado: 
+                break
+        
+        if eliminado:
+            self.guardar_datos()
+        return eliminado
